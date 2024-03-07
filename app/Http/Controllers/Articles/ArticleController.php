@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Articles;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class ArticleController extends Controller
@@ -13,6 +14,7 @@ class ArticleController extends Controller
             ['id' => 1, 'name' => 'Article One'],
             ['id' => 2, 'name' => 'Article Two']
         ];
+
         return view('articles.index',compact('articles'));
     }
 }
