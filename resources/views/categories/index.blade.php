@@ -28,7 +28,11 @@
       <td>{{ $category->description }}</td>
       <td>{{ $category->status }}</td>
       <td>
-        <a href="{{route('categories.edit',$category->id)}}"> Edit</a>
+        <a href="{{route('categories.edit',$category->id)}}" class="btn"> Edit</a>
+        <form action="{{route('categories.delete',$category->id)}}" method="POST">
+          @csrf
+          <button value="sumbit">Delete</button>
+        </form>
       </td>
     </tr>
     @endforeach

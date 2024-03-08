@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\Articles\ArticleController;
+use App\Http\Controllers\Article\ArticleController;
 use App\Http\Controllers\Category\CategoryController;
 use Illuminate\Support\Facades\Route;
 
@@ -29,12 +29,11 @@ Route::get('/users/{id}', function ($id) {
         Route::post('/store', [CategoryController::class, 'store'])->name('categories.store');
         Route::get('/{id}/edit', [CategoryController::class, 'edit'])->name('categories.edit');
         Route::post('/{id}/update', [CategoryController::class, 'update'])->name('categories.update');
+        Route::post('/{id}/delete', [CategoryController::class, 'delete'])->name('categories.delete');
     });
 
-    Route::group(['prefix' => 'article'], function () {
-        Route::get('/', [ArticleController::class, 'index'])->name('articles.index');
-    });
+    Route::resource('articles',ArticleController::class);
 
-    Route::get('test',function(){
-        return 'hello world';
+    Route::get('/', function() {
+        return view('welcome');
     });
