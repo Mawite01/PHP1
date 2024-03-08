@@ -24,17 +24,23 @@ class CategoryController extends Controller
 
     public function store(Request $request)
     {
+        $request->validate([
+            'name' => ['required','string'],
+            'description' => ['required', 'string'],
+            'status' => ['boolean']
+        ]);
+
         Category::create([
             'name' => $request->name,
             'description' => $request->description,
             'status' => $request->status
         ]);
 
-        DB::table('categories')->insert([
-            'name' => $request->name,
-            'description' => $request->description,
-            'status' => $request->status
-        ]);
+        // DB::table('categories')->insert([
+        //     'name' => $request->name,
+        //     'description' => $request->description,
+        //     'status' => $request->status
+        // ]);
 
         return redirect()->route('categories.index');
     }
@@ -64,5 +70,13 @@ class CategoryController extends Controller
 
         return redirect()->route('categories.index');
     
+    }
+
+    public function delete($id)
+    {
+        Category::where('id',$id)->delete();
+        DB::table('categories')->where('id',$id)->delete();
+        
+       return redirect()->route('categories.index');
     }
 }

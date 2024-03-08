@@ -12,8 +12,8 @@
     <div>
         <label for="">Status</label>
         <select name="status" id="">
-            <option value="1" @if($category->status == 1) selected @endif>true</option>
-            <option value="0" @if($category->status == 0) selected @endif>false</option>
+            <option value="1" @if($category->status === 1) selected @endif>true</option>
+            <option value="0" @if($category->status === 0) selected @endif>false</option>
         </select>
     </div>
     <button type="submit">Update</button>
