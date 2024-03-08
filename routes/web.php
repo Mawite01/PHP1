@@ -34,3 +34,7 @@ Route::get('/users/{id}', function ($id) {
     Route::group(['prefix' => 'article'], function () {
         Route::get('/', [ArticleController::class, 'index'])->name('articles.index');
     });
+
+    Route::get('test',function(){
+        return 'hello world';
+    });
