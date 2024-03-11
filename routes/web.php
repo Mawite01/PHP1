@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Article\ArticleController;
 use App\Http\Controllers\Category\CategoryController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -23,17 +24,22 @@ Route::get('/users/{id}', function ($id) {
     return "this is $id";
 });
 
-    Route::group(['prefix' => 'categories'], function () {
-        Route::get('/', [CategoryController::class, 'index'])->name('categories.index');
-        Route::get('/create', [CategoryController::class, 'create'])->name('categories.create');
-        Route::post('/store', [CategoryController::class, 'store'])->name('categories.store');
-        Route::get('/{id}/edit', [CategoryController::class, 'edit'])->name('categories.edit');
-        Route::post('/{id}/update', [CategoryController::class, 'update'])->name('categories.update');
-        Route::post('/{id}/delete', [CategoryController::class, 'delete'])->name('categories.delete');
+    Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
+        Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
+        Route::get('/categories/create', [CategoryController::class, 'create'])->name('categories.create');
+        Route::post('/categories/store', [CategoryController::class, 'store'])->name('categories.store');
+        Route::get('/categories/{id}/edit', [CategoryController::class, 'edit'])->name('categories.edit');
+        Route::post('/categories/{id}/update', [CategoryController::class, 'update'])->name('categories.update');
+        Route::post('/categories/{id}/delete', [CategoryController::class, 'delete'])->name('categories.delete');
+        Route::resource('articles',ArticleController::class);
     });
 
-    Route::resource('articles',ArticleController::class);
 
     Route::get('/', function() {
         return view('welcome');
     });
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/test', [App\Http\Controllers\HomeController::class, 'test'])->name('test');
