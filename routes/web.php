@@ -34,7 +34,6 @@ Route::get('/users/{id}', function ($id) {
         Route::resource('articles',ArticleController::class);
     });
 
-
     Route::get('/', function() {
         return view('welcome');
     });

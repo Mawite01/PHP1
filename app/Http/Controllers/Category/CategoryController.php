@@ -32,12 +32,20 @@ class CategoryController extends Controller
         $request->validate([
             'name' => ['required','string'],
             'description' => ['required', 'string'],
+            'image' => ['required','image'],
             'status' => ['boolean']
         ]);
 
+        // $path = $request->file('image')->store('category');
+
+        $imageName = time().'.'.$request->image->getClientOriginalExtension();
+
+        $request->image->move(public_path('/uploadedimages'), $imageName);
+      
         Category::create([
             'name' => $request->name,
             'description' => $request->description,
+            'image' => $imageName,
             'status' => $request->status
         ]);
 

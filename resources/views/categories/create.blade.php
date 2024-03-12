@@ -1,10 +1,18 @@
-<form action="{{ route('categories.store')}}" method="POST">
+<form action="{{ route('categories.store')}}" method="POST" enctype="multipart/form-data">
     @csrf
     <div>
         <label for="">Name</label>
         <input type="text" name="name">
         @if($errors->first('name'))
         <span style="color: red;">{{$errors->first('name')}}</span>
+        @endif
+    </div>
+    <br>
+    <div>
+        <label for="">Image</label>
+        <input type="file" name="image">
+        @if($errors->first('image'))
+        <span style="color: red;">{{$errors->first('image')}}</span>
         @endif
     </div>
     <br>
@@ -17,7 +25,7 @@
     </div>
     <div>
         <label for="">Status</label>
-        <select name="status" id=""> 
+        <select name="status" id="">
             <option value="1">true</option>
             <option value="0">false</option>
         </select>
