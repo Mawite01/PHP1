@@ -48,7 +48,7 @@ class CategoryController extends Controller
             'image' => $imageName,
             'status' => $request->status
         ]);
-
+        
         // DB::table('categories')->insert([
         //     'name' => $request->name,
         //     'description' => $request->description,

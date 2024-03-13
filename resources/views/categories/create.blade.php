@@ -1,3 +1,5 @@
+@extends('layouts.master')
+@section('content')
 <form action="{{ route('categories.store')}}" method="POST" enctype="multipart/form-data">
     @csrf
     <div>
@@ -35,3 +37,4 @@
     </div>
     <button type="submit">Submit</button>
 </form>
+@endsection
