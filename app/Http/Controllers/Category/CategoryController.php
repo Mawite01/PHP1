@@ -18,7 +18,6 @@ class CategoryController extends Controller
     public function index()
     {
         $categories = Category::with('categoryImages')->get();
-
         return view('categories.index',compact('categories'));
     }
 
@@ -32,28 +31,23 @@ class CategoryController extends Controller
         $request->validate([
             'name' => ['required','string'],
             'description' => ['required', 'string'],
-            'image' => ['required','image'],
+            'image' => ['required'],
+            'image.*' => ['mimes:jpeg,png'],
             'status' => ['boolean']
         ]);
 
-        // $path = $request->file('image')->store('category');
-
+        
         $imageName = time().'.'.$request->image->getClientOriginalExtension();
 
         $request->image->move(public_path('/uploadedimages'), $imageName);
       
-        Category::create([
+       Category::create([
             'name' => $request->name,
             'description' => $request->description,
             'image' => $imageName,
             'status' => $request->status
         ]);
         
-        // DB::table('categories')->insert([
-        //     'name' => $request->name,
-        //     'description' => $request->description,
-        //     'status' => $request->status
-        // ]);
 
         return redirect()->route('categories.index');
     }
