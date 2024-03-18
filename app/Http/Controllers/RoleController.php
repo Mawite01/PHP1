@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
@@ -13,6 +14,10 @@ class RoleController extends Controller
      */
     public function index()
     {
+        if (!Gate::allows('role_list')) {
+            return abort(401);
+        }
+
         $roles = Role::with('permissions')->get();
 
         return view('roles.index', compact('roles'));
@@ -23,6 +28,10 @@ class RoleController extends Controller
      */
     public function create()
     {
+        if (!Gate::allows('role_create')) {
+            return abort(401);
+        }
+
         $permissions = Permission::all();
 
         return view('roles.create', compact('permissions'));
@@ -33,6 +42,10 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
+        if (!Gate::allows('role_create')) {
+            return abort(401);
+        }
+
         $role = Role::create(
             [
                 'name' => $request->name

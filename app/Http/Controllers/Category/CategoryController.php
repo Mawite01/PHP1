@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 
 class CategoryController extends Controller
 {
@@ -17,17 +18,28 @@ class CategoryController extends Controller
 
     public function index()
     {
+        if (!Gate::allows('category_list')) {
+            return abort(401);
+        }
+
         $categories = Category::with('categoryImages')->get();
         return view('categories.index',compact('categories'));
     }
 
     public function create()
     {
+        if (!Gate::allows('category_create')) {
+            return abort(401);
+        }
         return view('categories.create');
     }
 
     public function store(Request $request)
     {
+        if (!Gate::allows('category_create')) {
+            return abort(401);
+        }
+
         $request->validate([
             'name' => ['required','string'],
             'description' => ['required', 'string'],
@@ -54,6 +66,10 @@ class CategoryController extends Controller
 
     public function edit($id)
     {
+        if (!Gate::allows('category_edit')) {
+            return abort(401);
+        }
+
         $category = Category::find($id);
 
         return view('categories.edit',compact('category'));
@@ -68,7 +84,9 @@ class CategoryController extends Controller
         //     'description' => $request->description,
         //     'status' => $request->status
         // ]);
-
+        if (!Gate::allows('category_edit')) {
+            return abort(401);
+        }
         Category::where('id',$id)->update([
             'name' => $request->name,
             'description' => $request->description,
@@ -81,6 +99,10 @@ class CategoryController extends Controller
 
     public function delete($id)
     {
+        if (!Gate::allows('category')) {
+            return abort(401);
+        }
+
         Category::where('id',$id)->delete();
         DB::table('categories')->where('id',$id)->delete();
         

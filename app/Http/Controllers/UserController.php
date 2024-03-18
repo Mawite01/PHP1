@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
 
@@ -14,8 +15,11 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::all();
+        if (!Gate::allows('user_list')) {
+            return abort(401);
+        }
 
+        $users = User::with('roles')->get();
         return view('users.index', compact('users'));
     }
 
@@ -24,6 +28,10 @@ class UserController extends Controller
      */
     public function create()
     {
+        if (!Gate::allows('user_create')) {
+            return abort(401);
+        }
+
         $roles = Role::all();
 
         return view('users.create', compact('roles'));
@@ -34,6 +42,10 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+        if (!Gate::allows('user_create')) {
+            return abort(401);
+        }
+
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
