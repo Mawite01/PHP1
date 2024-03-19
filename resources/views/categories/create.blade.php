@@ -12,7 +12,7 @@
     <br>
     <div>
         <label for="">Image</label>
-        <input type="file" name="image[]">
+        <input type="file" name="image">
         @if($errors->first('image'))
         <span style="color: red;">{{$errors->first('image')}}</span>
         @endif

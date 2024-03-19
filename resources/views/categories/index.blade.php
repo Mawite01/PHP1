@@ -15,9 +15,7 @@
             <td>{{ $cat->name}}</td>
             <td>{{ $cat->status}}</td>
             <td>
-                @foreach ($cat->categoryImages as $image)
-                     <img src="{{ asset('uploadedimages/'. $image->image)}}" alt="" width="100px">
-                @endforeach
+                <img src="{{ asset('uploadedimages/'. $cat->image)}}" alt="" width="50px">
             </td>
         </tr>
         @endforeach

@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Category;
 
 use App\Http\Controllers\Controller;
+use App\Http\Repositories\Category\CategoryRepositoryInterface;
+use App\Http\Requests\CategoryRequest;
+use App\Http\Services\Category\CategoryService;
 use App\Models\Category;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -11,9 +14,12 @@ use Illuminate\Support\Facades\Gate;
 
 class CategoryController extends Controller
 {
-    public function __construct()
+    private $categoryService;
+
+    public function __construct(CategoryService $categoryService)
     {
         $this->middleware('auth');
+        $this->categoryService = $categoryService;
     }
 
     public function index()
@@ -21,8 +27,8 @@ class CategoryController extends Controller
         if (!Gate::allows('category_list')) {
             return abort(401);
         }
+        $categories = $this->categoryService->index();
 
-        $categories = Category::with('categoryImages')->get();
         return view('categories.index',compact('categories'));
     }
 
@@ -31,36 +37,18 @@ class CategoryController extends Controller
         if (!Gate::allows('category_create')) {
             return abort(401);
         }
+
         return view('categories.create');
     }
 
-    public function store(Request $request)
+    public function store(CategoryRequest $request)
     {
         if (!Gate::allows('category_create')) {
             return abort(401);
         }
 
-        $request->validate([
-            'name' => ['required','string'],
-            'description' => ['required', 'string'],
-            'image' => ['required'],
-            'image.*' => ['mimes:jpeg,png'],
-            'status' => ['boolean']
-        ]);
-
+        $this->categoryService->store($request->validated());
         
-        $imageName = time().'.'.$request->image->getClientOriginalExtension();
-
-        $request->image->move(public_path('/uploadedimages'), $imageName);
-      
-       Category::create([
-            'name' => $request->name,
-            'description' => $request->description,
-            'image' => $imageName,
-            'status' => $request->status
-        ]);
-        
-
         return redirect()->route('categories.index');
     }
 
@@ -70,7 +58,7 @@ class CategoryController extends Controller
             return abort(401);
         }
 
-        $category = Category::find($id);
+        $category = $this->categoryService->findById($id);
 
         return view('categories.edit',compact('category'));
     }
