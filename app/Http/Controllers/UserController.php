@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
+use App\Http\Repositories\Role\RoleRepositoryInterface;
+use App\Http\Requests\UserRequest;
+use App\Http\Services\User\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
@@ -10,16 +12,24 @@ use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    private $userService;
+
+    private $roleRepository;
+
+    public function __construct(UserService $userService, RoleRepositoryInterface $roleRepository)
+    {
+        $this->userService = $userService;
+        $this->roleRepository = $roleRepository;
+    }
+
     public function index()
     {
         if (!Gate::allows('user_list')) {
             return abort(401);
         }
 
-        $users = User::with('roles')->get();
+        $users = $this->userService->index();
+
         return view('users.index', compact('users'));
     }
 
@@ -32,7 +42,7 @@ class UserController extends Controller
             return abort(401);
         }
 
-        $roles = Role::all();
+        $roles = $this->roleRepository->all();
 
         return view('users.create', compact('roles'));
     }
@@ -40,27 +50,14 @@ class UserController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(UserRequest $request)
     {
         if (!Gate::allows('user_create')) {
             return abort(401);
         }
 
-        $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'role_id' => ['required', 'integer', 'min:1']
-        ]);
-        $role = Role::where('id', $request->role_id)->first();
+        $this->userService->store($request->validated());
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password)
-        ]);
-
-        $user->assignRole($role);
         return redirect()->route('users.index');
     }
 

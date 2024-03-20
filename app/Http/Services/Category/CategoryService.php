@@ -37,6 +37,7 @@ class CategoryService
 
             array_push($uploadedImages, $imageName);
         }
+        
         return $uploadedImages;
     }
 
