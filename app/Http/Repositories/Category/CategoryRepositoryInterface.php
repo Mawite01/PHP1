@@ -11,5 +11,5 @@ interface CategoryRepositoryInterface
 
     public function store(array $params);
 
-    public function findById(int $id): Category
+    public function findById(int $id): Category;
 }

@@ -75,6 +75,7 @@ class CategoryController extends Controller
         if (!Gate::allows('category_edit')) {
             return abort(401);
         }
+
         Category::where('id',$id)->update([
             'name' => $request->name,
             'description' => $request->description,

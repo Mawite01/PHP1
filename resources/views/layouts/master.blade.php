@@ -54,23 +54,6 @@
             @endcan
 
 
-            <!-- Divider -->
-            <hr class="sidebar-divider">
-
-            <!-- Heading -->
-            <div class="sidebar-heading">
-                Interface
-            </div>
-
-
-            <!-- Divider -->
-            <hr class="sidebar-divider">
-
-            <!-- Heading -->
-            <div class="sidebar-heading">
-                Addons
-            </div>
-
             @can('category_list')
             <!-- Nav Item - Charts -->
             <li class="nav-item">
@@ -80,6 +63,13 @@
             </li>
 
             @endcan
+
+            <!-- Nav Item - Charts -->
+            <li class="nav-item">
+                <a class="nav-link" href="{{route('employee.index')}}">
+                    <i class="fas fa-fw fa-chart-area"></i>
+                    <span>API Call</span></a>
+            </li>
 
 
             <!-- Divider -->

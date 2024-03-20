@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\ApiController;
 use App\Http\Controllers\Article\ArticleController;
 use App\Http\Controllers\Category\CategoryController;
+use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
@@ -38,6 +40,7 @@ Route::get('/users/{id}', function ($id) {
         Route::resource('roles',RoleController::class);
         Route::resource('permissions',PermissionController::class);
         Route::resource('users',UserController::class);
+        Route::get('/employee',[EmployeeController::class, 'index'])->name('employee.index');
     });
 
     Route::get('/', function() {

@@ -3,7 +3,9 @@
 namespace App\Http\Repositories\Category;
 
 use App\Models\Category;
+use Exception;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 class CategoryRepository implements CategoryRepositoryInterface
 {
@@ -20,8 +22,22 @@ class CategoryRepository implements CategoryRepositoryInterface
         //     'image' => $params['image'],
         //     'status' => $params['status']
         // ]);
+        DB::beginTransaction();
+        try{
+            $category =  Category::create($params);
 
-        return Category::create($params);
+            foreach ($params['image'] as $image) {
+                $category->categoryImages()->sdf(['image' => $image]);
+            }
+            DB::commit();
+        }catch(Exception $e)
+        {
+            DB::rollBack();
+
+        }
+        
+
+        return $category;
     }
 
     public function findById(int $id): Category

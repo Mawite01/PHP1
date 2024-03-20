@@ -4,6 +4,7 @@ namespace App\Http\Services\Category;
 
 use App\Http\Repositories\Category\CategoryRepositoryInterface;
 use App\Models\Category;
+use Illuminate\Http\UploadedFile;
 
 class CategoryService
 {
@@ -13,35 +14,43 @@ class CategoryService
     {
         $this->categoryRepository = $categoryRepository;
     }
-    
+
     public function index()
     {
         return $this->categoryRepository->index();
     }
-    
+
     public function store(array $params)
     {
-        // $this->imageUpload($params);
-    
-        
-        $imageName = time().'.'.$params['image']->getClientOriginalExtension();
-        
-        $params['image']->move(public_path('/uploadedimages'), $imageName);
-        
-        $params['image'] = $imageName;
+        $params['image'] = $this->imagesUpload($params);
 
-        return $this->categoryRepository->store($params);
+        $this->categoryRepository->store($params);
     }
 
-    private function imageUpload(array $params)
+    private function imagesUpload(array $params): array
     {
-        $imageName = time().'.'.$params['image']->getClientOriginalExtension();
+        $uploadedImages = [];
+        foreach ($params['image'] as $image) {
+            $imageName = time() . '.' . $image->getClientOriginalExtension();
+
+            $image->move(public_path('/uploadedimages'), $imageName);
+
+            array_push($uploadedImages, $imageName);
+        }
+        return $uploadedImages;
+    }
+
+    private function imageUpload(array $params): string
+    {
+        $imageName = time() . '.' . $params['image']->getClientOriginalExtension();
 
         $params['image']->move(public_path('/uploadedimages'), $imageName);
+
+        return $imageName;
     }
 
     public function findById(int $id): Category
-    {   
+    {
         return $this->categoryRepository->findById($id);
     }
 }
