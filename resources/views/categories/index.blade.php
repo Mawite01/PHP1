@@ -1,6 +1,7 @@
 @extends('layouts.master')
 @section('content')
 
+<input type="datetime-local">
 <table>
     <thead>
     <th>Id</th>

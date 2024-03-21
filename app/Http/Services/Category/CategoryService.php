@@ -24,7 +24,7 @@ class CategoryService
     {
         $params['image'] = $this->imagesUpload($params);
 
-        $this->categoryRepository->store($params);
+     return $this->categoryRepository->store($params);
     }
 
     private function imagesUpload(array $params): array
