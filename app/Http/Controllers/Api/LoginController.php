@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\BaseApiController;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class LoginController extends Controller
+class LoginController extends BaseApiController
 {
     public function login(Request $request)
     {
@@ -15,13 +16,9 @@ class LoginController extends Controller
         if(Auth::attempt($credentials))
         {
             $user = Auth::user();
+            $user->token = $user->createToken('api_user')->plainTextToken;
 
-            return response()->json([
-                'status' => 200 ,
-                'message' => 'Login Success',
-                'data' => $user,
-                'token' =>  $user->createToken('api_user')->plainTextToken
-            ]);
+            return $this->success($user,'Login Success',200);
         }
 
     }

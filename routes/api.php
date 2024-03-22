@@ -23,5 +23,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 
 Route::post('login',[LoginController::class,'login']);
-Route::get('category',[CategoryController::class,'index']);
-Route::post('category/store',[CategoryController::class,'store']);
+
+Route::group(["middleware" => ['auth:sanctum']], function () {
+    Route::get('category',[CategoryController::class,'index']);
+    Route::post('category/store',[CategoryController::class,'store']);
+    Route::get('category/{id}',[CategoryController::class,'show']);
+    
+});
